@@ -15,7 +15,7 @@ public class Main {
         }
         switch(Selected){
             case "1":
-                ListAndSelectFiles.ListFiles();
+                ListAndSelectFiles.AnnotationSelect();
                 break;
             case "2":
                 break;
