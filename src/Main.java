@@ -1,10 +1,12 @@
 import TerminalFeatures.ConsoleColors;
 import TerminalFeatures.ListAndSelectFiles;
+import TextEditor.Editor;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         String Selected = "";
         System.out.println(ConsoleColors.getCyan() + "1 -> Ver Anotações" + ConsoleColors.getReset());
@@ -18,6 +20,7 @@ public class Main {
                 ListAndSelectFiles.AnnotationSelect();
                 break;
             case "2":
+                Editor newEditor = new Editor();
                 break;
             case "3":
                 break;

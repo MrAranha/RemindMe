@@ -2,12 +2,14 @@ package TerminalFeatures;
 
 import DTO.FilesDTO;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.nio.file.Paths;
 
 public class ListAndSelectFiles {
@@ -32,18 +34,18 @@ public class ListAndSelectFiles {
             return null;
         }
         System.out.println(ConsoleColors.getWhite() + "===========================" + ConsoleColors.getReset());
-        for(int i = 0; i < RawPathnames.length; i++) {
+        for(int i = 1; i <= RawPathnames.length; i++) {
             FilesDTO File = new FilesDTO();
             Path name = Paths.get(RawPathnames[i]);
             File.setFileName(name.getFileName().toString());
             File.setFilePath(RawPathnames[i]);
             File.setFileNumberMapping(i);
             FilesDTOList.add(File);
-            System.out.println(ConsoleColors.getYellow() + RawPathnames[i] + ConsoleColors.getReset());
+            System.out.println(ConsoleColors.getYellow() + i + " - " +RawPathnames[i] + ConsoleColors.getReset());
         }
         return FilesDTOList;
     }
-    public static void AnnotationSelect() {
+    public static void AnnotationSelect() throws IOException {
         Scanner scanner = new Scanner(System.in);
         String Selected = "";
         ArrayList<FilesDTO> FilesDTOList = ListFiles();
@@ -53,6 +55,12 @@ public class ListAndSelectFiles {
         do {
             Selected = scanner.nextLine().trim();
         } while(!CheckIfSelectionIsAFile(Selected, FilesDTOList));
-        System.out.println(ConsoleColors.getGreen() + "Sucesso!" + ConsoleColors.getReset());
+        FilesDTO selectedFile = FilesDTOList.get(Integer.parseInt(Selected));
+        Path filePath = Paths.get(System.getenv("APPDATA") + "\\" + "Notes" + "\\" + selectedFile.getFileName());
+
+        List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
+
+        lines.forEach(line ->
+                System.out.println(ConsoleColors.getGreen() + line + ConsoleColors.getReset()));
     }
 }
