@@ -75,6 +75,7 @@ public class Editor extends JFrame implements ActionListener {
         saveItem.addActionListener(this);
         exitItem.addActionListener(this);
 
+        fileMenu.add(openItem);
         fileMenu.add(saveItem);
         fileMenu.add(exitItem);
         menuBar.add(fileMenu);
@@ -105,9 +106,37 @@ public class Editor extends JFrame implements ActionListener {
             textArea.setFont(new Font((String) fontBox.getSelectedItem(), Font.PLAIN, textArea.getFont().getSize()));
         }
 
+        if (e.getSource() == openItem) {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(new File("."));
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Text files", "txt");
+            fileChooser.setFileFilter(filter);
+
+            int response = fileChooser.showOpenDialog(null);
+
+            if (response == JFileChooser.APPROVE_OPTION) {
+                File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
+                Scanner fileIn = null;
+
+                try {
+                    fileIn = new Scanner(file);
+                    if (file.isFile()) {
+                        while (fileIn.hasNextLine()) {
+                            String line = fileIn.nextLine() + "\n";
+                            textArea.append(line);
+                        }
+                    }
+                } catch (FileNotFoundException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                } finally {
+                    fileIn.close();
+                }
+            }
+        }
         if (e.getSource() == saveItem) {
             JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(new File(System.getenv("APPDATA") + "\\" + "Notes"));
+            fileChooser.setCurrentDirectory(new File("."));
 
             int response = fileChooser.showSaveDialog(null);
 
@@ -115,16 +144,10 @@ public class Editor extends JFrame implements ActionListener {
                 File file;
                 PrintWriter fileOut = null;
 
-                String lastFourChars = fileChooser.getSelectedFile().getAbsolutePath().substring(fileChooser.getSelectedFile().getAbsolutePath().length() - 4);
-
-                if(lastFourChars.equals(".txt"))
-                    file = new File(fileChooser.getSelectedFile().getAbsolutePath());
-                else
-                    file = new File(fileChooser.getSelectedFile().getAbsolutePath()+ ".txt");
+                file = new File(fileChooser.getSelectedFile().getAbsolutePath());
                 try {
                     fileOut = new PrintWriter(file);
                     fileOut.println(textArea.getText());
-                    fileOut.close();
                 } catch (FileNotFoundException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
