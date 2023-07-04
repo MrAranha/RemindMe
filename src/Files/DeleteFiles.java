@@ -23,6 +23,7 @@ public class DeleteFiles {
         ArrayList<FilesDTO> FilesDTOList = ListFiles();
         if(FilesDTOList == null)
             return "";
+        
         System.out.println(ConsoleColors.getRed() + "Por favor selecione uma anotação para deletar!" + ConsoleColors.getReset());
         do {
             Selected = scanner.nextLine().trim();
